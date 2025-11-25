@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "blocks": [
+    { "type": "parameter-slider", "category": "action", "state": { "variable": "width", "value": "160" }, "children": [] },
+    { "type": "parameter-slider", "category": "action", "state": { "variable": "height", "value": "120" }, "children": [] },
+    { "type": "set-variable", "category": "action", "state": { "variable": "maxIter", "value": "60" }, "children": [] },
+    { "type": "set-variable", "category": "action", "state": { "variable": "xmin", "value": "-2.5" }, "children": [] },
+    { "type": "set-variable", "category": "action", "state": { "variable": "xmax", "value": "1.0" }, "children": [] },
+    { "type": "set-variable", "category": "action", "state": { "variable": "ymin", "value": "-1.2" }, "children": [] },
+    { "type": "set-variable", "category": "action", "state": { "variable": "ymax", "value": "1.2" }, "children": [] },
+    {
+      "type": "function-def",
+      "category": "logic",
+      "state": { "name": "mandel", "params": "cx,cy,zx,zy,iter" },
+      "children": [
+        {
+          "type": "if",
+          "category": "logic",
+          "state": { "condition": "zx*zx + zy*zy > 4 || iter >= maxIter" },
+          "children": [ { "type": "return", "category": "logic", "state": { "value": "iter" }, "children": [] } ]
+        },
+        { "type": "set-variable", "category": "action", "state": { "variable": "nextZX", "value": "zx*zx - zy*zy + cx" }, "children": [] },
+        { "type": "set-variable", "category": "action", "state": { "variable": "nextZY", "value": "2*zx*zy + cy" }, "children": [] },
+        { "type": "function-call", "category": "logic", "state": { "name": "mandel", "args": "cx,cy,nextZX,nextZY,iter+1", "target": "result" }, "children": [] },
+        { "type": "return", "category": "logic", "state": { "value": "result" }, "children": [] }
+      ]
+    },
+    { "type": "clear-canvas", "category": "visual", "state": {}, "children": [] },
+    {
+      "type": "parallel-grid",
+      "category": "loop",
+      "state": { "width": "width", "height": "height", "chunkWidth": "8", "chunkHeight": "8", "xVar": "chunkX", "yVar": "chunkY" },
+      "children": [
+        {
+          "type": "for-range",
+          "category": "loop",
+          "state": { "variable": "px", "from": "chunkX", "to": "Math.min(width, chunkX + chunkWidth)" },
+          "children": [
+            {
+              "type": "for-range",
+              "category": "loop",
+              "state": { "variable": "py", "from": "chunkY", "to": "Math.min(height, chunkY + chunkHeight)" },
+              "children": [
+                { "type": "set-variable", "category": "action", "state": { "variable": "cx", "value": "xmin + (px / width) * (xmax - xmin)" }, "children": [] },
+                { "type": "set-variable", "category": "action", "state": { "variable": "cy", "value": "ymin + (py / height) * (ymax - ymin)" }, "children": [] },
+                { "type": "function-call", "category": "logic", "state": { "name": "mandel", "args": "cx,cy,0,0,0", "target": "iter" }, "children": [] },
+                { "type": "set-variable", "category": "action", "state": { "variable": "shade", "value": "iter / maxIter" }, "children": [] },
+                {
+                  "type": "color-rgb",
+                  "category": "visual",
+                  "state": { "target": "pixelColor", "r": "Math.floor(255 * shade)", "g": "Math.floor(120 * (1 - shade))", "b": "Math.floor(255 * (1 - shade))" },
+                  "children": []
+                },
+                { "type": "draw-rect", "category": "visual", "state": { "x": "px", "y": "py", "width": "1", "height": "1", "color": "pixelColor" }, "children": [] }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

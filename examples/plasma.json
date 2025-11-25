@@ -1,0 +1,42 @@
+{
+  "version": 1,
+  "blocks": [
+    { "type": "clear-canvas", "state": {}, "children": [] },
+    { "type": "set-variable", "state": { "variable": "w", "value": "320" }, "children": [] },
+    { "type": "set-variable", "state": { "variable": "h", "value": "240" }, "children": [] },
+    {
+      "type": "parallel-grid",
+      "state": {
+        "width": "w",
+        "height": "h",
+        "chunkWidth": "2",
+        "chunkHeight": "2",
+        "xVar": "x",
+        "yVar": "y"
+      },
+      "children": [
+        {
+          "type": "color-rgb",
+          "state": {
+            "target": "c",
+            "r": "128 + 127*Math.sin(x*0.05 + Math.sin(y*0.10))",
+            "g": "128 + 127*Math.sin(y*0.04 + Math.sin(x*0.07))",
+            "b": "128 + 127*Math.sin((x + y)*0.03)"
+          },
+          "children": []
+        },
+        {
+          "type": "draw-rect",
+          "state": {
+            "x": "x",
+            "y": "y",
+            "width": "chunkWidth",
+            "height": "chunkHeight",
+            "color": "c"
+          },
+          "children": []
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,64 @@
+{
+  "version": 1,
+  "blocks": [
+    { "id": "block-1", "type": "set-variable", "category": "action", "state": { "variable": "width", "value": "80" }, "children": [] },
+    { "id": "block-2", "type": "set-variable", "category": "action", "state": { "variable": "height", "value": "60" }, "children": [] },
+    { "id": "block-3", "type": "set-variable", "category": "action", "state": { "variable": "maxIter", "value": "40" }, "children": [] },
+    { "id": "block-4", "type": "set-variable", "category": "action", "state": { "variable": "xmin", "value": "-2.5" }, "children": [] },
+    { "id": "block-5", "type": "set-variable", "category": "action", "state": { "variable": "xmax", "value": "1" }, "children": [] },
+    { "id": "block-6", "type": "set-variable", "category": "action", "state": { "variable": "ymin", "value": "-1.2" }, "children": [] },
+    { "id": "block-7", "type": "set-variable", "category": "action", "state": { "variable": "ymax", "value": "1.2" }, "children": [] },
+    {
+      "id": "block-8",
+      "type": "function-def",
+      "category": "logic",
+      "state": { "name": "mandel", "params": "cx,cy,zx,zy,iter" },
+      "children": [
+        {
+          "id": "block-9",
+          "type": "if",
+          "category": "logic",
+          "state": { "condition": "zx*zx + zy*zy > 4 || iter >= maxIter" },
+          "children": [
+            { "id": "block-10", "type": "return", "category": "logic", "state": { "value": "iter" }, "children": [] }
+          ]
+        },
+        { "id": "block-11", "type": "set-variable", "category": "action", "state": { "variable": "nextZX", "value": "zx*zx - zy*zy + cx" }, "children": [] },
+        { "id": "block-12", "type": "set-variable", "category": "action", "state": { "variable": "nextZY", "value": "2*zx*zy + cy" }, "children": [] },
+        { "id": "block-13", "type": "function-call", "category": "logic", "state": { "name": "mandel", "args": "cx,cy,nextZX,nextZY,iter+1", "target": "iter" }, "children": [] },
+        { "id": "block-21", "type": "return", "category": "logic", "state": { "value": "iter" }, "children": [] }
+      ]
+    },
+    {
+      "id": "block-16",
+      "type": "for-range",
+      "category": "loop",
+      "state": { "variable": "px", "from": "0", "to": "width" },
+      "children": [
+        {
+          "id": "block-17",
+          "type": "for-range",
+          "category": "loop",
+          "state": { "variable": "py", "from": "0", "to": "height" },
+          "children": [
+            { "id": "block-14", "type": "set-variable", "category": "action", "state": { "variable": "cx", "value": "xmin + (px / width) * (xmax - xmin)" }, "children": [] },
+            { "id": "block-15", "type": "set-variable", "category": "action", "state": { "variable": "cy", "value": "ymin + (py / height) * (ymax - ymin)" }, "children": [] },
+            { "id": "block-18", "type": "function-call", "category": "logic", "state": { "name": "mandel", "args": "cx,cy,0,0,0", "target": "iter" }, "children": [] },
+            { "id": "block-19", "type": "set-variable", "category": "action", "state": { "variable": "shade", "value": "iter / maxIter" }, "children": [] },
+            {
+              "id": "block-20",
+              "type": "plot-pixel",
+              "category": "visual",
+              "state": {
+                "x": "px",
+                "y": "py",
+                "color": "`#${(255*shade|0).toString(16).padStart(2,\"0\")}00${(255*(1-shade)|0).toString(16).padStart(2,\"0\")}`"
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

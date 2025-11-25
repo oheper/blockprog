@@ -1,0 +1,56 @@
+{
+  "version": 1,
+  "blocks": [
+    { "type": "parameter-slider", "state": { "variable": "width", "value": "80" }, "children": [] },
+    { "type": "parameter-slider", "state": { "variable": "height", "value": "60" }, "children": [] },
+    { "type": "parameter-slider", "state": { "variable": "steps", "value": "5000" }, "children": [] },
+    { "type": "set-variable", "state": { "variable": "x", "value": "Math.floor(width / 2)" }, "children": [] },
+    { "type": "set-variable", "state": { "variable": "y", "value": "Math.floor(height / 2)" }, "children": [] },
+    { "type": "set-variable", "state": { "variable": "dir", "value": "0" }, "children": [] },
+    { "type": "set-variable", "state": { "variable": "grid", "value": "{}" }, "children": [] },
+    { "type": "set-variable", "state": { "variable": "trail", "value": "{}" }, "children": [] },
+    { "type": "set-variable", "state": { "variable": "fade", "value": "0.96" }, "children": [] },
+    { "type": "clear-canvas", "children": [] },
+
+    {
+      "type": "repeat",
+      "state": { "count": "steps" },
+      "children": [
+        { "type": "set-variable", "state": { "variable": "cellKey", "value": "x + ',' + y" }, "children": [] },
+        { "type": "dict-get", "state": { "target": "isBlack", "dict": "grid", "key": "cellKey", "fallback": "false" }, "children": [] },
+
+        { "type": "if", "state": { "condition": "isBlack" }, "children": [
+          { "type": "dict-set", "state": { "dict": "grid", "key": "cellKey", "value": "false" }, "children": [] },
+          { "type": "set-variable", "state": { "variable": "dir", "value": "(Number(dir) + 3) % 4" }, "children": [] }
+        ]},
+        { "type": "if", "state": { "condition": "!isBlack" }, "children": [
+          { "type": "dict-set", "state": { "dict": "grid", "key": "cellKey", "value": "true" }, "children": [] },
+          { "type": "set-variable", "state": { "variable": "dir", "value": "(Number(dir) + 1) % 4" }, "children": [] }
+        ]},
+
+        { "type": "set-variable", "state": { "variable": "dx", "value": "(Number(dir) === 1 ? 1 : Number(dir) === 3 ? -1 : 0)" }, "children": [] },
+        { "type": "set-variable", "state": { "variable": "dy", "value": "(Number(dir) === 2 ? 1 : Number(dir) === 0 ? -1 : 0)" }, "children": [] },
+        { "type": "set-variable", "state": { "variable": "x", "value": "(x + dx + width) % width" }, "children": [] },
+        { "type": "set-variable", "state": { "variable": "y", "value": "(y + dy + height) % height" }, "children": [] },
+
+        { "type": "set-variable", "state": { "variable": "cellKey", "value": "x + ',' + y" }, "children": [] },
+        { "type": "dict-get", "state": { "target": "age", "dict": "trail", "key": "cellKey", "fallback": "0" }, "children": [] },
+        { "type": "set-variable", "state": { "variable": "age", "value": "1" }, "children": [] },
+        { "type": "dict-set", "state": { "dict": "trail", "key": "cellKey", "value": "age" }, "children": [] },
+
+        { "type": "dict-for-each", "state": { "dict": "trail", "keyVar": "k", "valueVar": "v" }, "children": [
+          { "type": "set-variable", "state": { "variable": "newV", "value": "v * fade" }, "children": [] },
+          { "type": "dict-set", "state": { "dict": "trail", "key": "k", "value": "newV" }, "children": [] }
+        ]},
+
+        { "type": "dict-get", "state": { "target": "age", "dict": "trail", "key": "cellKey", "fallback": "1" }, "children": [] },
+        { "type": "set-variable", "state": { "variable": "shade", "value": "Math.max(0, Math.min(1, age))" }, "children": [] },
+        { "type": "plot-pixel", "state": {
+          "x": "x",
+          "y": "y",
+          "color": "`#${(255*shade|0).toString(16).padStart(2,\"0\")}00${(255*(1-shade)|0).toString(16).padStart(2,\"0\")}`"
+        }, "children": [] }
+      ]
+    }
+  ]
+}

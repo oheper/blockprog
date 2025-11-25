@@ -1,0 +1,30 @@
+{
+  "version": 1,
+  "blocks": [
+    { "type": "set-variable", "state": { "variable": "width", "value": "120" }, "children": [] },
+    { "type": "set-variable", "state": { "variable": "height", "value": "90" }, "children": [] },
+    { "type": "set-variable", "state": { "variable": "particles", "value": "30" }, "children": [] },
+    {
+      "type": "object-def",
+      "state": { "name": "move" },
+      "children": [
+        { "type": "function-def", "state": { "name": "step", "params": "p" }, "children": [
+          { "type": "set-variable", "state": { "variable": "nx", "value": "(p.x + p.vx + width) % width" }, "children": [] },
+          { "type": "set-variable", "state": { "variable": "ny", "value": "(p.y + p.vy + height) % height" }, "children": [] },
+          { "type": "return", "state": { "value": "{ x: nx, y: ny, vx: p.vx, vy: p.vy }" }, "children": [] }
+        ]},
+        { "type": "function-def", "state": { "name": "randomParticle", "params": "" }, "children": [
+          { "type": "return", "state": { "value": "{ x: Math.random()*width, y: Math.random()*height, vx:(Math.random()*2-1)*2, vy:(Math.random()*2-1)*2 }" }, "children": [] }
+        ]}
+      ]
+    },
+    { "type": "clear-canvas", "children": [] },
+    { "type": "repeat", "state": { "count": "particles" }, "children": [
+      { "type": "function-call", "state": { "name": "move.randomParticle", "args": "", "target": "p" }, "children": [] },
+      { "type": "repeat", "state": { "count": "80" }, "children": [
+        { "type": "plot-pixel", "state": { "x": "p.x|0", "y": "p.y|0", "color": "#00ffaa" }, "children": [] },
+        { "type": "function-call", "state": { "name": "move.step", "args": "p", "target": "p" }, "children": [] }
+      ] }
+    ] }
+  ]
+}

@@ -1,0 +1,83 @@
+{
+  "version": 1,
+  "blocks": [
+    { "type": "set-variable", "category": "action", "state": { "variable": "width", "value": "80" }, "children": [] },
+    { "type": "set-variable", "category": "action", "state": { "variable": "height", "value": "60" }, "children": [] },
+    { "type": "set-variable", "category": "action", "state": { "variable": "maxEnergy", "value": "6" }, "children": [] },
+    { "type": "set-variable", "category": "action", "state": { "variable": "steps", "value": "200" }, "children": [] },
+    {
+      "type": "function-def",
+      "category": "logic",
+      "state": { "name": "heat", "params": "x,y,energy" },
+      "children": [
+        {
+          "type": "if",
+          "category": "logic",
+          "state": { "condition": "energy <= 0 || x < 0 || x >= width || y < 0 || y >= height" },
+          "children": [
+            { "type": "return", "category": "logic", "state": { "value": "0" }, "children": [] }
+          ]
+        },
+        {
+          "type": "set-variable",
+          "category": "action",
+          "state": { "variable": "shade", "value": "Math.min(1, energy / maxEnergy)" },
+          "children": []
+        },
+        {
+          "type": "plot-pixel",
+          "category": "visual",
+          "state": {
+            "x": "x",
+            "y": "y",
+            "color": "`#${(255 - Math.floor(200 * shade)).toString(16).padStart(2,\"0\")}${Math.floor(200 * shade).toString(16).padStart(2,\"0\")}00`"
+          },
+          "children": []
+        },
+        {
+          "type": "set-variable",
+          "category": "action",
+          "state": { "variable": "nextEnergy", "value": "energy - 1" },
+          "children": []
+        },
+        { "type": "function-call", "category": "logic", "state": { "name": "heat", "args": "x+1,y,nextEnergy" }, "children": [] },
+        { "type": "function-call", "category": "logic", "state": { "name": "heat", "args": "x-1,y,nextEnergy" }, "children": [] },
+        { "type": "function-call", "category": "logic", "state": { "name": "heat", "args": "x,y+1,nextEnergy" }, "children": [] },
+        { "type": "function-call", "category": "logic", "state": { "name": "heat", "args": "x,y-1,nextEnergy" }, "children": [] },
+        { "type": "return", "category": "logic", "state": { "value": "energy" }, "children": [] }
+      ]
+    },
+    { "type": "clear-canvas", "category": "visual", "state": {}, "children": [] },
+    {
+      "type": "repeat",
+      "category": "loop",
+      "state": { "count": "steps" },
+      "children": [
+        {
+          "type": "set-variable",
+          "category": "action",
+          "state": { "variable": "px", "value": "Math.floor(Math.random() * width)" },
+          "children": []
+        },
+        {
+          "type": "set-variable",
+          "category": "action",
+          "state": { "variable": "py", "value": "Math.floor(height / 2 + Math.random() * height / 2)" },
+          "children": []
+        },
+        {
+          "type": "set-variable",
+          "category": "action",
+          "state": { "variable": "energy", "value": "Math.floor(Math.random() * maxEnergy) + 1" },
+          "children": []
+        },
+        {
+          "type": "function-call",
+          "category": "logic",
+          "state": { "name": "heat", "args": "px, py, energy" },
+          "children": []
+        }
+      ]
+    }
+  ]
+}

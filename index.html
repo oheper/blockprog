@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LernProg – Block Editor</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="top-bar">
+      <h1>LernProg – Baustein Editor</h1>
+      <p class="subtitle">Baue klassische Programmierstrukturen durch Lego-artige Blöcke zusammen.</p>
+    </header>
+    <main class="layout">
+      <section class="palette" aria-label="Blockpalette">
+        <h2>Bausteine</h2>
+        <div id="palette-categories" class="palette-categories"></div>
+      </section>
+      <section class="workspace" aria-label="Arbeitsfläche">
+        <div class="workspace-header">
+          <h2>Programmfläche</h2>
+          <div class="workspace-actions">
+            <button id="reset-workspace" type="button">Alles löschen</button>
+            <button id="run-program" type="button">Programm ausführen</button>
+            <button id="step-program" type="button">Schritt</button>
+            <label class="fast-mode-toggle">
+              <input id="fast-mode-toggle" type="checkbox" />
+              Schnellmodus
+            </label>
+            <label class="speed-control">
+              Tempo
+              <input id="speed-control" type="range" min="0" max="1000" step="50" value="350" />
+              <span id="speed-value">0.35s</span>
+            </label>
+            <button id="export-workspace" type="button">Export JSON</button>
+            <label class="file-button">
+              Import JSON
+              <input id="import-workspace" type="file" accept="application/json" hidden />
+            </label>
+          </div>
+        </div>
+        <div id="workspace" class="workspace-canvas" aria-live="polite"></div>
+      </section>
+      <section class="preview" aria-label="Codevorschau">
+        <h2>Generierter Code</h2>
+        <pre id="code-preview" class="code-preview"># Baue einige Blöcke – die Vorschau erscheint hier.</pre>
+      </section>
+      <section class="runtime" aria-label="Programmausgabe">
+        <div class="runtime-header">
+          <h2>Ausgabe</h2>
+          <span id="runtime-status" class="runtime-status">Bereit</span>
+        </div>
+        <pre id="runtime-output" class="runtime-output"># Noch nichts ausgeführt.</pre>
+      </section>
+      <section class="visual" aria-label="Visualisierung">
+        <div class="visual-header">
+          <h2>Zeichenfläche</h2>
+          <button id="clear-canvas" type="button">Canvas leeren</button>
+        </div>
+        <canvas id="visual-canvas" width="320" height="240"></canvas>
+      </section>
+      <section class="register" aria-label="Variablenregister">
+        <div class="register-header">
+          <h2>Variablenregister</h2>
+          <p id="step-description" class="step-description">Noch keine Schritte ausgeführt.</p>
+        </div>
+        <div id="register" class="register-body">
+          <p class="register-empty">Keine Variablen aktiv.</p>
+        </div>
+      </section>
+    </main>
+    <template id="palette-template">
+      <article class="palette-group">
+        <header>
+          <h3 class="palette-title"></h3>
+          <p class="palette-description"></p>
+        </header>
+        <div class="palette-blocks"></div>
+      </article>
+    </template>
+    <script src="src/palette-data.js"></script>
+    <script src="src/runtime/block-registry.js"></script>
+    <script src="src/runtime/block-loader.js"></script>
+    <script src="src/runtime.js"></script>
+    <script src="src/preview.js"></script>
+    <script src="src/canvas.js"></script>
+    <script src="src/register.js"></script>
+    <script src="src/workspace.js"></script>
+    <script src="src/palette-ui.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>

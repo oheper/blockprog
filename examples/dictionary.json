@@ -1,0 +1,18 @@
+{
+  "version": 1,
+  "blocks": [
+    { "type": "dict-set", "state": { "dict": "punkte", "key": "alice", "value": "10" }, "children": [] },
+    { "type": "dict-set", "state": { "dict": "punkte", "key": "bob", "value": "7" }, "children": [] },
+    { "type": "dict-get", "state": { "target": "wert", "dict": "punkte", "key": "alice", "fallback": "0" }, "children": [] },
+    { "type": "print", "state": { "message": "Alice Punkte: {{wert}}" }, "children": [] },
+    {
+      "type": "dict-for-each",
+      "state": { "dict": "punkte", "keyVar": "name", "valueVar": "score" },
+      "children": [
+        { "type": "print", "state": { "message": "{{name}}: {{score}}" }, "children": [] }
+      ]
+    },
+    { "type": "dict-get", "state": { "target": "unknown", "dict": "punkte", "key": "carol", "fallback": "\"kein Eintrag\"" }, "children": [] },
+    { "type": "print", "state": { "message": "Carol: {{unknown}}" }, "children": [] }
+  ]
+}
